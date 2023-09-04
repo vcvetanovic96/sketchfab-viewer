@@ -1,27 +1,62 @@
-// This function is run when the sketchfab client has been
-// initialized
+const getNodeByName = (nodemap, nodename) => {
+  return Object.values(nodemap).find((node) => {
+    if (node.type === "MatrixTransform" && node.name === nodename) {
+      return node;
+    }
+  });
+};
+
+const addClickEvent = (api, instanceID) => {
+  // Perform an action whenever the iframe is clicked
+  let isVisible = true;
+  api.addEventListener(
+    "click",
+    function (info) {
+      console.log(info);
+      // show or hide an object
+      if (isVisible === true) {
+        api.hide(instanceID);
+      } else {
+        api.show(instanceID);
+      }
+      isVisible = !isVisible;
+    },
+    { pick: "fast" }
+  );
+};
+
 const success = (api) => {
-    // api.start will start loading the 3D model
-    api.start(() => console.log("Sketchfab scene starts loading"));
-    api.addEventListener("viewerready", () => console.log("Sketchfab scene is ready"))
-  };
-  
-  const loadSketchfab = (sceneuid, elementId) => {
-    // To get started with Sketchfab, we need to create a client
-    // object for a certain iframe in the DOM
-    const iframe = document.getElementById(elementId);
-    const client = new Sketchfab("1.12.1", iframe);
-  
-    // Then we can initialize the client with a specific model
-    // and some player parameters
-    client.init(sceneuid, {
-      success: success,
-      error: () => console.error("Sketchfab API error"),
-      ui_stop: 0,
-      preload: 1,
-      camera: 0
+  api.start(function () {
+    api.addEventListener("viewerready", function () {
+      api.getNodeMap(function (err, nodes) {
+        console.log(nodes);
+        const tire = getNodeByName(nodes, "tire_mat4_01");
+        addClickEvent(api, tire.instanceID);
+      });
+
+      api.getMaterialList(function (err, materials) {
+        let material = materials.find((element) => element.name === "body");
+        console.log(material.channels);
+        material.channels.EmitColor.factor = 1;
+        material.channels.EmitColor.enable = "true";
+        material.channels.EmitColor.color = [0, 128, 0];
+        api.setMaterial(material);
+      });
     });
-  };
-  
-  loadSketchfab("2161ffd41a074c3e8c3d78783b2f2902", "api-frame");
-  
+  });
+};
+
+const loadSketchfab = (sceneuid, elementId) => {
+  const iframe = document.getElementById(elementId);
+  const client = new Sketchfab("1.12.1", iframe);
+
+  client.init(sceneuid, {
+    success: success,
+    error: () => console.error("Sketchfab API error"),
+    ui_stop: 0,
+    preload: 1,
+    camera: 0,
+  });
+};
+
+loadSketchfab("27d0ec784ceb4c80a03cc17ebea8acb4", "api-frame");
