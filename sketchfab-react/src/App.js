@@ -4,6 +4,7 @@ import * as React from "react";
 import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import BasicTabs from "./BasicPanelProps.js";
+import ColorPicker from "./ColorPicker";
 
 function App() {
   const [value, setValue] = React.useState(0);
@@ -25,9 +26,7 @@ function App() {
           <Grid item xs={9}>
             <BasicTabs value={value} onChooseTab={handleChange} />
           </Grid>
-          <Grid item xs={3}>
-            {value}
-          </Grid>
+          <Grid item xs={3}></Grid>
         </Grid>
       </Box>
     </div>
