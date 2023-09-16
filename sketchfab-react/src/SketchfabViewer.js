@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from "react";
 
-// Our wonderful chair model
 const MODEL_UID = "b5cfed180f6643c395de8157c52e0afe";
 
 const options = {
@@ -12,11 +11,17 @@ const options = {
   ui_stop: 0,
 };
 
+const BRACELET_OPTION = {
+  blue: "option_bracelet_rubberblue",
+  white: "option_bracelet_rubberwhite",
+  cuir: "option_bracelet_cuir",
+};
+
 export default function SketchfabViewer({ apiRef }) {
   // This ref will contain the actual iframe object
   const viewerIframeRef = useRef(null);
 
-  const ViewerIframe = (
+  const SketchfabViewer = (
     <iframe
       // We feed the ref to the iframe component to get the underlying DOM object
       ref={viewerIframeRef}
@@ -25,14 +30,26 @@ export default function SketchfabViewer({ apiRef }) {
     />
   );
 
+  const findNode = (nodemap, name) => {
+    return Object.values(nodemap).find((node) => {
+      return node.name === name && node.type === "MatrixTransform";
+    });
+  };
+
   useEffect(
     () => {
-      // Initialize the viewer
       let client = new window.Sketchfab(viewerIframeRef.current);
       client.init(MODEL_UID, {
         ...options,
         success: (api) => {
           apiRef.current = api;
+          apiRef.current.addEventListener("viewerready", () => {
+            apiRef.current.getNodeMap((err, nodeMap) => {
+              const blueBracelet = findNode(nodeMap, BRACELET_OPTION.blue);
+              const whiteBracelet = findNode(nodeMap, BRACELET_OPTION.white);
+              const cuirBracelet = findNode(nodeMap, BRACELET_OPTION.cuir);
+            });
+          });
         },
         error: () => {
           console.log("Viewer error");
@@ -43,5 +60,5 @@ export default function SketchfabViewer({ apiRef }) {
     []
   );
 
-  return ViewerIframe;
+  return SketchfabViewer;
 }

@@ -6,7 +6,6 @@ import BasicTabs from "./BasicPanelProps.js";
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import SketchfabViewer from "./SketchfabViewer.js";
-
 function App() {
   const apiRef = useRef(null);
 
