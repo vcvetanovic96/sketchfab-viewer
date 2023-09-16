@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/sketchfab-viewer/static/css/main.c9b0f16f.css",
+    "main.js": "/sketchfab-viewer/static/js/main.1978731a.js",
+    "static/js/787.8c34212e.chunk.js": "/sketchfab-viewer/static/js/787.8c34212e.chunk.js",
+    "index.html": "/sketchfab-viewer/index.html",
+    "main.c9b0f16f.css.map": "/sketchfab-viewer/static/css/main.c9b0f16f.css.map",
+    "main.1978731a.js.map": "/sketchfab-viewer/static/js/main.1978731a.js.map",
+    "787.8c34212e.chunk.js.map": "/sketchfab-viewer/static/js/787.8c34212e.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.c9b0f16f.css",
+    "static/js/main.1978731a.js"
+  ]
+}
