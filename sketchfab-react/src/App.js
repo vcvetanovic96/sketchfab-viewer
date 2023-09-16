@@ -6,13 +6,39 @@ import BasicTabs from "./BasicPanelProps.js";
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import SketchfabViewer from "./SketchfabViewer.js";
+
 function App() {
   const apiRef = useRef(null);
-
   const [value, setValue] = useState(0);
+  const [buttons, setButtons] = useState(null);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
+  };
+
+  const handleOptionClick = (optionName, options) => {
+    Object.values(options).forEach((node) => {
+      if (node.name === optionName) {
+        apiRef.current.show(node.instanceID);
+        return;
+      }
+      apiRef.current.hide(node.instanceID);
+    });
+  };
+
+  const initOptions = (allOptions) => {
+    setButtons(() =>
+      Object.values(allOptions).map((option) => {
+        return (
+          <Button
+            key={option.name}
+            onClick={() => handleOptionClick(option.name, allOptions)}
+          >
+            {option.name}
+          </Button>
+        );
+      })
+    );
   };
 
   return (
@@ -27,7 +53,7 @@ function App() {
         >
           <Grid item xs={9}>
             <BasicTabs value={value} onChooseTab={handleChange} />
-            <SketchfabViewer apiRef={apiRef} />
+            <SketchfabViewer apiRef={apiRef} initOptions={initOptions} />
           </Grid>
           <Grid item xs={3}>
             <ButtonGroup
@@ -35,9 +61,25 @@ function App() {
               orientation="vertical"
               aria-label="vertical outlined button group"
             >
-              <Button key="blue">Blue</Button>
-              <Button key="black">Black</Button>
-              <Button key="white">White</Button>
+              {buttons}
+              {/* <Button
+                key="blue"
+                onClick={(e) => console.log(e.target.textContent)}
+              >
+                Blue
+              </Button>
+              <Button
+                key="black"
+                onClick={(e) => console.log(e.target.textContent)}
+              >
+                Black
+              </Button>
+              <Button
+                key="white"
+                onClick={(e) => console.log(e.target.textContent)}
+              >
+                White
+              </Button> */}
             </ButtonGroup>
           </Grid>
         </Grid>

@@ -17,7 +17,7 @@ const BRACELET_OPTION = {
   cuir: "option_bracelet_cuir",
 };
 
-export default function SketchfabViewer({ apiRef }) {
+export default function SketchfabViewer({ apiRef, initOptions }) {
   // This ref will contain the actual iframe object
   const viewerIframeRef = useRef(null);
 
@@ -48,6 +48,16 @@ export default function SketchfabViewer({ apiRef }) {
               const blueBracelet = findNode(nodeMap, BRACELET_OPTION.blue);
               const whiteBracelet = findNode(nodeMap, BRACELET_OPTION.white);
               const cuirBracelet = findNode(nodeMap, BRACELET_OPTION.cuir);
+              apiRef.current.hide(blueBracelet.instanceID);
+              apiRef.current.hide(whiteBracelet.instanceID);
+
+              const options = {
+                blue: blueBracelet,
+                white: whiteBracelet,
+                cuir: cuirBracelet,
+              };
+
+              initOptions(options);
             });
           });
         },
