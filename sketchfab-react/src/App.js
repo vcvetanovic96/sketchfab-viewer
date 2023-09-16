@@ -1,10 +1,11 @@
 import "./App.css";
 import { Grid } from "@mui/material";
 import * as React from "react";
-import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import BasicTabs from "./BasicPanelProps.js";
-import ColorPicker from "./ColorPicker";
+import Button from "@mui/material/Button";
+import ButtonBase from "@mui/material/ButtonBase";
+import ButtonGroup from "@mui/material/ButtonGroup";
 
 function App() {
   const [value, setValue] = React.useState(0);
@@ -26,7 +27,17 @@ function App() {
           <Grid item xs={9}>
             <BasicTabs value={value} onChooseTab={handleChange} />
           </Grid>
-          <Grid item xs={3}></Grid>
+          <Grid item xs={3}>
+            <ButtonGroup
+              size="large"
+              orientation="vertical"
+              aria-label="vertical outlined button group"
+            >
+              <Button key="blue">Blue</Button>
+              <Button key="black">Black</Button>
+              <Button key="white">White</Button>
+            </ButtonGroup>
+          </Grid>
         </Grid>
       </Box>
     </div>
