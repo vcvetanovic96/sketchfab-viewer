@@ -7,6 +7,15 @@ import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import SketchfabViewer from "./SketchfabViewer.js";
 
+const COLOR_OPTIONS = {
+  option_bracelet_rubberblue: "#00b4fe",
+  option_bracelet_rubberwhite: "#ffffff",
+  option_bracelet_cuir: "#273136",
+  option_coque_goldgloss: "#ffcd3c",
+  option_coque_silverrough: "#888888",
+  option_coque_silverglossy: "#CCCCCC",
+};
+
 function App() {
   const apiRef = useRef(null);
   const [value, setValue] = useState(0);
@@ -15,20 +24,9 @@ function App() {
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
-    console.log(value);
   };
 
   const handleOptionClick = (optionName, options) => {
-    Object.values(options).forEach((node) => {
-      if (node.name === optionName) {
-        apiRef.current.show(node.instanceID);
-        return;
-      }
-      apiRef.current.hide(node.instanceID);
-    });
-  };
-
-  const handleModelOptionClick = (optionName, options) => {
     Object.values(options).forEach((node) => {
       if (node.name === optionName) {
         apiRef.current.show(node.instanceID);
@@ -44,7 +42,11 @@ function App() {
         return (
           <Button
             key={option.name}
+            sx={{
+              backgroundColor: setBackGroundColor(option.name),
+            }}
             onClick={() => handleOptionClick(option.name, bandOptions)}
+            size="large"
           >
             {option.name}
           </Button>
@@ -57,7 +59,11 @@ function App() {
         return (
           <Button
             key={option.name}
-            onClick={() => handleModelOptionClick(option.name, coqueOptions)}
+            sx={{
+              backgroundColor: setBackGroundColor(option.name),
+            }}
+            size="large"
+            onClick={() => handleOptionClick(option.name, coqueOptions)}
           >
             {option.name}
           </Button>
@@ -66,20 +72,24 @@ function App() {
     );
   };
 
+  const setBackGroundColor = (optionName) => {
+    return COLOR_OPTIONS[optionName];
+  };
+
   return (
     <div className="App">
       <Box sx={{ width: "100%", height: "100%" }}>
         <Grid
           sx={{ width: "100%", height: "100%" }}
           container
-          rowSpacing={1}
-          direction="row"
+          direction="column"
           columnSpacing={{ xs: 1, sm: 2, md: 3 }}
         >
           <Grid item xs={9}>
             <BasicTabs value={value} onChooseTab={handleChange} />
             <SketchfabViewer apiRef={apiRef} initOptions={initOptions} />
           </Grid>
+
           <Grid item xs={3}>
             <ButtonGroup
               size="large"

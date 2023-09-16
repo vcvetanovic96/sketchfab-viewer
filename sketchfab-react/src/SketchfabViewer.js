@@ -36,6 +36,34 @@ export default function SketchfabViewer({ apiRef, initOptions }) {
     />
   );
 
+  const handleNodeMap = (apiRef) => {
+    apiRef.current.getNodeMap((err, nodeMap) => {
+      const blueBracelet = findNode(nodeMap, BRACELET_OPTION.blue);
+      const whiteBracelet = findNode(nodeMap, BRACELET_OPTION.white);
+      const cuirBracelet = findNode(nodeMap, BRACELET_OPTION.cuir);
+      const goldCoque = findNode(nodeMap, COQUE_OPTION.gold);
+      const silverRoughCoque = findNode(nodeMap, COQUE_OPTION.silverRough);
+      const silverGlossyCoque = findNode(nodeMap, COQUE_OPTION.silverGlossy);
+
+      setDefaultBraceletVisibility(apiRef.current, blueBracelet, whiteBracelet);
+      setDefaultCoqueVisibility(apiRef.current, goldCoque, silverGlossyCoque);
+
+      const braceletOptions = {
+        blue: blueBracelet,
+        white: whiteBracelet,
+        cuir: cuirBracelet,
+      };
+
+      const coqueOptions = {
+        gold: goldCoque,
+        silverGlossy: silverGlossyCoque,
+        silverRough: silverRoughCoque,
+      };
+
+      initOptions(braceletOptions, coqueOptions);
+    });
+  };
+
   const findNode = (nodemap, name) => {
     return Object.values(nodemap).find((node) => {
       return node.name === name && node.type === "MatrixTransform";
@@ -56,6 +84,12 @@ export default function SketchfabViewer({ apiRef, initOptions }) {
     apiRef.hide(silverGlossyCoque.instanceID);
   };
 
+  const handleMaterials = (apiRef) => {
+    apiRef.current.getMaterialList((err, materials) => {
+      console.log(materials);
+    });
+  };
+
   useEffect(
     () => {
       let client = new window.Sketchfab(viewerIframeRef.current);
@@ -64,45 +98,8 @@ export default function SketchfabViewer({ apiRef, initOptions }) {
         success: (api) => {
           apiRef.current = api;
           apiRef.current.addEventListener("viewerready", () => {
-            apiRef.current.getNodeMap((err, nodeMap) => {
-              const blueBracelet = findNode(nodeMap, BRACELET_OPTION.blue);
-              const whiteBracelet = findNode(nodeMap, BRACELET_OPTION.white);
-              const cuirBracelet = findNode(nodeMap, BRACELET_OPTION.cuir);
-              const goldCoque = findNode(nodeMap, COQUE_OPTION.gold);
-              const silverRoughCoque = findNode(
-                nodeMap,
-                COQUE_OPTION.silverRough
-              );
-              const silverGlossyCoque = findNode(
-                nodeMap,
-                COQUE_OPTION.silverGlossy
-              );
-              setDefaultBraceletVisibility(
-                apiRef.current,
-                blueBracelet,
-                whiteBracelet
-              );
-
-              setDefaultCoqueVisibility(
-                apiRef.current,
-                goldCoque,
-                silverGlossyCoque
-              );
-
-              const braceletOptions = {
-                blue: blueBracelet,
-                white: whiteBracelet,
-                cuir: cuirBracelet,
-              };
-
-              const coqueOptions = {
-                gold: goldCoque,
-                silverGlossy: silverGlossyCoque,
-                silverRough: silverRoughCoque,
-              };
-
-              initOptions(braceletOptions, coqueOptions);
-            });
+            handleNodeMap(apiRef);
+            handleMaterials(apiRef);
           });
         },
         error: () => {
