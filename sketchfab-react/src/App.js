@@ -1,14 +1,16 @@
 import "./App.css";
 import { Grid } from "@mui/material";
-import * as React from "react";
+import React, { useRef, useState } from "react";
 import Box from "@mui/material/Box";
 import BasicTabs from "./BasicPanelProps.js";
 import Button from "@mui/material/Button";
-import ButtonBase from "@mui/material/ButtonBase";
 import ButtonGroup from "@mui/material/ButtonGroup";
+import SketchfabViewer from "./SketchfabViewer.js";
 
 function App() {
-  const [value, setValue] = React.useState(0);
+  const apiRef = useRef(null);
+
+  const [value, setValue] = useState(0);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -26,6 +28,7 @@ function App() {
         >
           <Grid item xs={9}>
             <BasicTabs value={value} onChooseTab={handleChange} />
+            <SketchfabViewer apiRef={apiRef} />
           </Grid>
           <Grid item xs={3}>
             <ButtonGroup
