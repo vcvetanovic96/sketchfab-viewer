@@ -10,10 +10,12 @@ import SketchfabViewer from "./SketchfabViewer.js";
 function App() {
   const apiRef = useRef(null);
   const [value, setValue] = useState(0);
-  const [buttons, setButtons] = useState(null);
+  const [bandButtons, setBandButtons] = useState(null);
+  const [modelButtons, setModelButtons] = useState(null);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
+    console.log(value);
   };
 
   const handleOptionClick = (optionName, options) => {
@@ -26,13 +28,36 @@ function App() {
     });
   };
 
-  const initOptions = (allOptions) => {
-    setButtons(() =>
-      Object.values(allOptions).map((option) => {
+  const handleModelOptionClick = (optionName, options) => {
+    Object.values(options).forEach((node) => {
+      if (node.name === optionName) {
+        apiRef.current.show(node.instanceID);
+        return;
+      }
+      apiRef.current.hide(node.instanceID);
+    });
+  };
+
+  const initOptions = (bandOptions, coqueOptions) => {
+    setBandButtons(() =>
+      Object.values(bandOptions).map((option) => {
         return (
           <Button
             key={option.name}
-            onClick={() => handleOptionClick(option.name, allOptions)}
+            onClick={() => handleOptionClick(option.name, bandOptions)}
+          >
+            {option.name}
+          </Button>
+        );
+      })
+    );
+
+    setModelButtons(() =>
+      Object.values(coqueOptions).map((option) => {
+        return (
+          <Button
+            key={option.name}
+            onClick={() => handleModelOptionClick(option.name, coqueOptions)}
           >
             {option.name}
           </Button>
@@ -61,25 +86,7 @@ function App() {
               orientation="vertical"
               aria-label="vertical outlined button group"
             >
-              {buttons}
-              {/* <Button
-                key="blue"
-                onClick={(e) => console.log(e.target.textContent)}
-              >
-                Blue
-              </Button>
-              <Button
-                key="black"
-                onClick={(e) => console.log(e.target.textContent)}
-              >
-                Black
-              </Button>
-              <Button
-                key="white"
-                onClick={(e) => console.log(e.target.textContent)}
-              >
-                White
-              </Button> */}
+              {value === 0 ? bandButtons : modelButtons}
             </ButtonGroup>
           </Grid>
         </Grid>

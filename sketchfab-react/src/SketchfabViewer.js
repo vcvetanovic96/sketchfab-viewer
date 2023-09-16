@@ -4,7 +4,7 @@ const MODEL_UID = "b5cfed180f6643c395de8157c52e0afe";
 
 const options = {
   autostart: 1,
-  autospin: 0.2,
+  autospin: 0,
   ui_controls: 0,
   ui_infos: 0,
   ui_watermark: 0,
@@ -15,6 +15,12 @@ const BRACELET_OPTION = {
   blue: "option_bracelet_rubberblue",
   white: "option_bracelet_rubberwhite",
   cuir: "option_bracelet_cuir",
+};
+
+const COQUE_OPTION = {
+  gold: "option_coque_goldgloss",
+  silverRough: "option_coque_silverrough",
+  silverGlossy: "option_coque_silverglossy",
 };
 
 export default function SketchfabViewer({ apiRef, initOptions }) {
@@ -45,19 +51,39 @@ export default function SketchfabViewer({ apiRef, initOptions }) {
           apiRef.current = api;
           apiRef.current.addEventListener("viewerready", () => {
             apiRef.current.getNodeMap((err, nodeMap) => {
+              console.log(nodeMap);
               const blueBracelet = findNode(nodeMap, BRACELET_OPTION.blue);
               const whiteBracelet = findNode(nodeMap, BRACELET_OPTION.white);
               const cuirBracelet = findNode(nodeMap, BRACELET_OPTION.cuir);
+              const goldCoque = findNode(nodeMap, COQUE_OPTION.gold);
+              const silverRoughCoque = findNode(
+                nodeMap,
+                COQUE_OPTION.silverRough
+              );
+              const silverGlossyCoque = findNode(
+                nodeMap,
+                COQUE_OPTION.silverGlossy
+              );
+
               apiRef.current.hide(blueBracelet.instanceID);
               apiRef.current.hide(whiteBracelet.instanceID);
 
-              const options = {
+              apiRef.current.hide(goldCoque.instanceID);
+              apiRef.current.hide(silverGlossyCoque.instanceID);
+
+              const braceletOptions = {
                 blue: blueBracelet,
                 white: whiteBracelet,
                 cuir: cuirBracelet,
               };
 
-              initOptions(options);
+              const coqueOptions = {
+                gold: goldCoque,
+                silverGlossy: silverGlossyCoque,
+                silverRough: silverRoughCoque,
+              };
+
+              initOptions(braceletOptions, coqueOptions);
             });
           });
         },
