@@ -42,6 +42,20 @@ export default function SketchfabViewer({ apiRef, initOptions }) {
     });
   };
 
+  const setDefaultBraceletVisibility = (
+    apiRef,
+    blueBracelet,
+    whiteBracelet
+  ) => {
+    apiRef.hide(blueBracelet.instanceID);
+    apiRef.hide(whiteBracelet.instanceID);
+  };
+
+  const setDefaultCoqueVisibility = (apiRef, goldCoque, silverGlossyCoque) => {
+    apiRef.hide(goldCoque.instanceID);
+    apiRef.hide(silverGlossyCoque.instanceID);
+  };
+
   useEffect(
     () => {
       let client = new window.Sketchfab(viewerIframeRef.current);
@@ -51,7 +65,6 @@ export default function SketchfabViewer({ apiRef, initOptions }) {
           apiRef.current = api;
           apiRef.current.addEventListener("viewerready", () => {
             apiRef.current.getNodeMap((err, nodeMap) => {
-              console.log(nodeMap);
               const blueBracelet = findNode(nodeMap, BRACELET_OPTION.blue);
               const whiteBracelet = findNode(nodeMap, BRACELET_OPTION.white);
               const cuirBracelet = findNode(nodeMap, BRACELET_OPTION.cuir);
@@ -64,12 +77,17 @@ export default function SketchfabViewer({ apiRef, initOptions }) {
                 nodeMap,
                 COQUE_OPTION.silverGlossy
               );
+              setDefaultBraceletVisibility(
+                apiRef.current,
+                blueBracelet,
+                whiteBracelet
+              );
 
-              apiRef.current.hide(blueBracelet.instanceID);
-              apiRef.current.hide(whiteBracelet.instanceID);
-
-              apiRef.current.hide(goldCoque.instanceID);
-              apiRef.current.hide(silverGlossyCoque.instanceID);
+              setDefaultCoqueVisibility(
+                apiRef.current,
+                goldCoque,
+                silverGlossyCoque
+              );
 
               const braceletOptions = {
                 blue: blueBracelet,
